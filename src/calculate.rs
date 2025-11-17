@@ -45,7 +45,8 @@ impl VectorSpace for StoneInfo {
 impl CustomSettings{
     pub(crate) fn new(g:f64 ) -> Self{
         CustomSettings{
-        gravity: g
+        gravity: g,
+
         }
     }
 }
