@@ -673,11 +673,14 @@ impl StoneEditor {
         let ang_vel = parse(&self.y0_angular_velocity);
 
         // 3. 创建 y0 StoneInfo (假设 StoneInfo 是 2D 结构)
+        //======
+        //重点：生成y0
+        //======
         let y0 = StoneInfo {
             position: pos,
             velocity: vel,
             angle: Vector2D::new(ang, 0.0),
-            angle_velocity: Vector2D::new(ang_vel,0.0),
+            angle_velocity: Vector2D::new(0.0,ang_vel),
         };
 
         // 4. 合并 blueprint 和 y0

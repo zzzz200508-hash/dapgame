@@ -7,13 +7,15 @@ mod basic_structs;
 mod print;
 mod solver2;
 mod stone_editor;
+mod stone_phy;
 
 use macroquad::prelude::*;
-use crate::stone_editor::StoneEditor;
+use crate::stone_editor::{StoneBlueprint, StoneEditor};
 use crate::calculate::*;
 use crate::basic_structs::*;
 use crate::print::*;
 use crate::solver2::{OdeSystem, RungeKuttaSolver, VectorSpace};
+use crate::stone_phy::StoneProperties;
 
 /// 注意： `#[macroquad::main]` 宏将此函数转换为 `async`
 /// 并为 Macroquad 窗口提供一个主循环。
@@ -59,12 +61,12 @@ async fn main() {
 
         // --- 阶段 2: 模拟执行 ---
 
+
         // 1. 定义模拟参数
         let dt: f64 = 0.001; // (推荐使用更小的时间步)
 
         // 2. 创建物理系统 (OdeSystem)
-        // 注意: 你的 CustomSettings 应该被扩展
-        // 以便接收 `blueprint` 来计算质量和转动惯量
+        let stone_properties = StoneProperties::new(&blueprint);
         let system = CustomSettings {
             gravity: 9.81,
             // TODO: 在 CustomSettings 中添加石片属性
