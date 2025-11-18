@@ -183,14 +183,6 @@ impl SimulationRenderer {
                 draw_line(p1.x, p1.y, p2.x, p2.y, 1.0, YELLOW);
             }
         }
-
-        // 8. 绘制一个 "前" 指示器 (红色箭头)
-        let arrow_len = rect.w as f64 * 0.04 * local_scale; // 箭头长度
-        let front_x = center.x + (cos_spin * arrow_len) as f32;
-        let front_y = center.y - (sin_spin * arrow_len) as f32; // Y 轴反转
-
-        draw_line(center.x, center.y, front_x, front_y, 2.0, RED);
-        draw_circle(front_x, front_y, 4.0, RED);
     }
 
     /// 绘制轨迹（所有历史位置）

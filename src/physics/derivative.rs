@@ -110,7 +110,7 @@ impl CustomSettings{
         // 如果石头正在向上运动 (vy > 0)，流体分离会导致升力急剧下降。
         // 如果不加这个，石头会在出水瞬间被巨大的力“弹”飞到高空。
         if velocity.y > 0.0 {
-            f_lift_mag *= 0.1; // 向上运动时，升力大幅衰减
+            f_lift_mag *= 0.3; // 向上运动时，升力大幅衰减
         }
 
         let f_lift = dir_lift * f_lift_mag;

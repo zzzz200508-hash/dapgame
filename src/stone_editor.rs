@@ -84,7 +84,7 @@ impl StoneEditor {
             y0_position: Vec2Input::new("0.0", "0.2"),    // 变为 2D
             y0_velocity: Vec2Input::new("10.0", "0.0"),  // 变为 2D
             y0_angle: "5.0".to_string(),                 // 变为 1D (5 度攻角)
-            y0_angular_velocity: "30.0".to_string(),     // 变为 1D (绕 Z 轴旋转)
+            y0_angular_velocity: "15.0".to_string(),     // 变为 1D (绕 Z 轴旋转)
 
             result: None,
         }
