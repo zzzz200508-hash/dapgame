@@ -48,23 +48,19 @@ impl CustomSettings {
     }
 
     pub fn deriv_bouncing(&self, _t: f64, stone: &StoneInfo) -> StoneInfo {
-        // [核心修复] 实时计算当前 RK4 子步的浸没状态
-        // 不再依赖 self.current_submerged_polygon (它是上一帧的缓存)
+        // 实时计算当前 RK4 子步的浸没状态
         let (sim, clipped) = self.calculate_instant_submerged(stone);
 
         // 1. 计算水动力 (不含重力)
         let f_hydro = self.compute_hydro_force(stone, sim);
 
-        // 2. 计算总合力 (水动力 + 重力) -> 用于线加速度
+        // 2. 计算总合力
         let f_gravity = Vector2D { x: 0.0, y: self.M * self.gravity };
         let f_total = f_hydro + f_gravity;
 
         // 引入附加质量 (Added Mass)
         // 当石片在水中时，它必须带动周围的水运动。这增加了有效惯性。
-        // 对于平板，附加质量可能非常大。我们假设它与排开水的质量成正比。
         // 估算公式：M_added = rho * Volume_ref * Coeff
-        // 这里用 Sim (Area) * Thickness (假定0.02m作为估算厚度) * Coeff
-        // 系数 2.0 ~ 5.0 是扁平物体的典型值
         let estimated_thickness = 0.02;
         let added_mass = self.rho * sim * estimated_thickness * 5.0;
 
@@ -79,8 +75,7 @@ impl CustomSettings {
         //let mass = if self.M > 1e-9 { self.M } else { 1.0 };
         //let acceleration = f_total * (1.0 / mass);
 
-        // 4. 计算角加速度 (力矩)
-        // 传入 f_hydro，因为只有水动力产生相对于质心的力矩
+        // 4. 计算角加速度
         let angular_acc = self.compute_angular_acceleration(stone, sim, &clipped, f_hydro);
 
         StoneInfo {
@@ -102,8 +97,7 @@ impl CustomSettings {
 }
 
 impl CustomSettings {
-    // [新增] 辅助函数：根据传入的 StoneInfo 实时计算浸没多边形
-    // 确保了 clipped 变量是有计算来源的
+    // 根据传入的 StoneInfo 实时计算浸没多边形
     fn calculate_instant_submerged(&self, stone: &StoneInfo) -> (f64, Vec<Vector2D>) {
         // 调用 simulation.rs 中的逻辑
         let outline_world = self.outline_to_world(stone);
@@ -117,7 +111,7 @@ impl CustomSettings {
         (sim, clipped)
     }
 
-    // [核心重构] 水动力计算：增加表面张力和波辐射耗散
+    // 水动力计算：增加表面张力和波辐射耗散
     pub fn compute_hydro_force(&self, stone: &StoneInfo, sim: f64) -> Vector2D {
         let velocity = stone.velocity;
         let speed_sq = velocity.length_squared();

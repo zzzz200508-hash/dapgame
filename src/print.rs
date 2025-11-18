@@ -1,9 +1,9 @@
 // 职责：接收2D物理模拟的状态，并在XY平面上将其可视化。
 
 use macroquad::prelude::*;
-use crate::physics::simulation::StoneInfo; // 你的 (2D) 状态向量
+use crate::physics::simulation::StoneInfo; // 状态向量
 use crate::basic_structs::Vector2D;
-use crate::stone_phy::StoneProperties; // 你的物理属性结构体
+use crate::stone_phy::StoneProperties; // 物理属性结构体
 
 /// # 2D 模拟渲染器
 ///
@@ -26,6 +26,7 @@ pub struct SimulationRenderer {
     // 摄像机平移状态
     is_panning: bool,
     last_mouse_pos: Vec2,
+    pub should_restart: bool,
 }
 
 impl SimulationRenderer {
@@ -44,6 +45,7 @@ impl SimulationRenderer {
             world_origin_on_screen: vec2(screen_width() / 4.0, screen_height() * 0.75),
             is_panning: false,
             last_mouse_pos: Vec2::ZERO,
+            should_restart: false,
         }
     }
 
@@ -241,7 +243,7 @@ impl SimulationRenderer {
     }
 
     /// 绘制右侧的信息面板
-    fn draw_info_panel(&self) {
+    fn draw_info_panel(&mut self) {
         let info_x = screen_width() - 300.0;
         let info_y = 20.0;
         let line_height = 25.0;
@@ -288,6 +290,37 @@ impl SimulationRenderer {
             "rool: scaling | Left mouse button drag: Pan",
             250.0, screen_height() - 30.0, 20.0, GRAY,
         );
+        let btn_w = 120.0;
+        let btn_h = 40.0;
+        // 放在右下角
+        let btn_x = screen_width() - 150.0;
+        let btn_y = screen_height() - 60.0;
+        let btn_rect = Rect::new(btn_x, btn_y, btn_w, btn_h);
+
+        // 检测鼠标悬停
+        let mouse_pos = mouse_position();
+        let mouse_point = vec2(mouse_pos.0, mouse_pos.1);
+        let is_hover = btn_rect.contains(mouse_point);
+
+        // 绘制按钮背景
+        let btn_color = if is_hover { LIGHTGRAY } else { DARKGRAY };
+        draw_rectangle(btn_x, btn_y, btn_w, btn_h, btn_color);
+        draw_rectangle_lines(btn_x, btn_y, btn_w, btn_h, 2.0, WHITE);
+
+        // 绘制按钮文字
+        let text = "Restart";
+        let font_size = 20;
+        // 简单居中计算
+        let text_dims = measure_text(text, None, font_size, 1.0);
+        let text_x = btn_x + (btn_w - text_dims.width) / 2.0;
+        let text_y = btn_y + (btn_h + text_dims.height) / 2.0 - 2.0; // 微调垂直居中
+
+        draw_text(text, text_x, text_y, font_size as f32, WHITE);
+
+        // 检测点击
+        if is_mouse_button_pressed(MouseButton::Left) && is_hover {
+            self.should_restart = true;
+        }
     }
 
     // --- 坐标 & 控制 ---
@@ -358,6 +391,9 @@ impl SimulationRenderer {
         if is_key_pressed(KeyCode::R) {
             self.reset();
         }
+        if is_key_pressed(KeyCode::Q) {
+            self.reset_view();
+        }
     }
 
     pub fn toggle_play(&mut self) {
@@ -375,5 +411,10 @@ impl SimulationRenderer {
 
     pub fn has_trajectory(&self) -> bool {
         !self.trajectory.is_empty()
+    }
+
+    pub fn reset_view(&mut self) {
+        self.scale = 8000.0; // 恢复默认缩放
+        self.world_origin_on_screen = vec2(screen_width() / 4.0, screen_height() * 0.75);
     }
 }
