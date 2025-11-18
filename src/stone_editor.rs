@@ -1,7 +1,7 @@
 use macroquad::prelude::*;
 use crate::basic_structs::Vector2D; // [修正] 不再需要 Vector3D
 use crate::bezier::BezierInfo;
-use crate::calculate::StoneInfo; // 假设 StoneInfo 现在使用 2D 向量
+use crate::physics::simulation::StoneInfo; // 假设 StoneInfo 现在使用 2D 向量
 
 // 对应 UML 中的编辑状态
 #[derive(PartialEq, Clone, Copy)]

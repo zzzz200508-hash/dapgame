@@ -170,10 +170,10 @@ impl Vector2D {
     fn dot(self, other: Self) -> f64 {
         self.x * other.x + self.y * other.y
     }
-    fn length_squared(self) -> f64 {
+    pub(crate) fn length_squared(self) -> f64 {
         self.x * self.x + self.y * self.y
     }
-    fn length(self) -> f64 {
+    pub(crate) fn length(self) -> f64 {
         self.length_squared().sqrt()
     }
     fn normalize(self) -> Self {

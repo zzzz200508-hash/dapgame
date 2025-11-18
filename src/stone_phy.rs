@@ -1,4 +1,3 @@
-use std::cmp;
 use crate::basic_structs::Vector2D;
 use crate::stone_editor::StoneBlueprint;
 
@@ -65,7 +64,7 @@ impl StoneProperties {
 
         let mut d_max = 0.0;
         for point in & collision_mesh_com{
-            if(point.x * point.x + point.y * point.y >= d_max){d_max = point.x * point.x + point.y * point.y}
+            if point.x * point.x + point.y * point.y >= d_max {d_max = point.x * point.x + point.y * point.y}
             else{d_max = d_max}
         }
 
@@ -130,7 +129,7 @@ fn calculate_centroid(polygon: &[Vector2D]) -> Vector2D {
         let p1 = polygon[i];
         let p2 = polygon[(i + 1) % n];
 
-        let cross_product = (p1.x * p2.y - p2.x * p1.y);
+        let cross_product = p1.x * p2.y - p2.x * p1.y;
         signed_area_x2 += cross_product;
 
         centroid_x += (p1.x + p2.x) * cross_product;
