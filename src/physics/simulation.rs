@@ -95,7 +95,7 @@ impl CustomSettings {
                 let vertical_force = self.compute_vertical_force(stone);
                 let velocity_mag = stone.velocity.length(); // 你需要在 Vector2D/3D 里实现 length()
 
-                if stone.position.y < -0.5 {
+                if stone.position.y < -0.1 {
                     self.phase = Phase::Sinking;
                     println!("Phase switched: Bouncing -> Sinking at y={}", stone.position.y);
                 }

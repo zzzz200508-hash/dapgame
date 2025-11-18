@@ -176,7 +176,7 @@ impl Vector2D {
     pub(crate) fn length(self) -> f64 {
         self.length_squared().sqrt()
     }
-    fn normalize(self) -> Self {
+    pub(crate) fn normalize(self) -> Self {
         let len = self.length();
         if len > 0.0 { self * (1.0 / len) } else { self }
     }
