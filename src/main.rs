@@ -49,7 +49,7 @@ async fn main() {
         // 2. 初始化物理环境 (CustomSettings)
         // [修正] 使用 parameters.rs 中提供的 new 构造函数
         // 传入重力 -9.81 和 计算好的 stone_props
-        let mut system = CustomSettings::new(-9.81, stone_props.clone());
+        let mut system = CustomSettings::new(9.81, stone_props.clone());
 
         // 3. 初始化渲染器
         // 缩放比例 8000.0 (像素/米)

@@ -45,7 +45,7 @@ impl CustomSettings{
             position: stone.velocity, 
             velocity: Vector2D {
                 x: stone.velocity.x,   // 水平速度恒定
-                y: self.gravity, // 垂直自由落体
+                y: -self.gravity, // 垂直自由落体
             }, 
             angle: stone.angle_velocity, 
             angle_velocity: Vector2D { x: (0.0), y: (0.0) }, // TODO:
@@ -55,7 +55,7 @@ impl CustomSettings{
     pub fn deriv_bouncing(&self, _t: f64, stone: &StoneInfo) -> StoneInfo{
         StoneInfo {
             position: stone.velocity, 
-            velocity: self.compute_force(stone), 
+            velocity: self.compute_force(stone) * (1.0 / self.M),
             angle: stone.angle_velocity, 
             angle_velocity: self.compute_angular_acceleration(stone),
         }

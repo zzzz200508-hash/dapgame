@@ -256,7 +256,7 @@ impl SimulationRenderer {
 
         if !self.trajectory.is_empty() {
             draw_text(
-                &format!("帧: {}/{}", self.current_frame + 1, self.trajectory.len()),
+                &format!("F: {}/{}", self.current_frame + 1, self.trajectory.len()),
                 info_x, info_y, 20.0, WHITE,
             );
 
@@ -264,24 +264,24 @@ impl SimulationRenderer {
             if self.current_frame < self.trajectory.len() {
                 let state = &self.trajectory[self.current_frame];
                 draw_text(
-                    &format!("时间: {:.3} s", self.current_frame as f64 * (1.0/60.0)), // 假设为 60fps
+                    &format!("time: {:.3} s", self.current_frame as f64 * (1.0/60.0)), // 假设为 60fps
                     info_x, info_y + line_height * 1.0, 20.0, WHITE,
                 );
                 draw_text(
-                    &format!("位置 (x, y): ({:.2}, {:.2}) m", state.position.x, state.position.y),
+                    &format!("location (x, y): ({:.2}, {:.2}) m", state.position.x, state.position.y),
                     info_x, info_y + line_height * 2.0, 20.0, WHITE,
                 );
                 draw_text(
-                    &format!("速度 (x, y): ({:.2}, {:.2}) m/s", state.velocity.x, state.velocity.y),
+                    &format!("velocity (x, y): ({:.2}, {:.2}) m/s", state.velocity.x, state.velocity.y),
                     info_x, info_y + line_height * 3.0, 20.0, WHITE,
                 );
                 draw_text(
-                    &format!("角度 (俯仰, 自转): ({:.1}, {:.1}) deg",
+                    &format!("angle (x, y): ({:.1}, {:.1}) deg",
                              state.angle.x.to_degrees(), state.angle.y.to_degrees()),
                     info_x, info_y + line_height * 4.0, 20.0, WHITE,
                 );
                 draw_text(
-                    &format!("角速度 (俯仰, 自转): ({:.1}, {:.1}) r/s",
+                    &format!("angle velocity (x, y): ({:.1}, {:.1}) r/s",
                              state.angle_velocity.x, state.angle_velocity.y),
                     info_x, info_y + line_height * 5.0, 20.0, WHITE,
                 );
@@ -289,11 +289,11 @@ impl SimulationRenderer {
         }
 
         draw_text(
-            "SPACE: 播放/暂停 | R: 重置",
+            "SPACE: Play/Pause | R: Reset",
             20.0, screen_height() - 30.0, 20.0, GRAY,
         );
         draw_text(
-            "滚轮: 缩放 | 中键拖动: 平移",
+            "rool: scaling | Left mouse button drag: Pan",
             250.0, screen_height() - 30.0, 20.0, GRAY,
         );
     }
@@ -342,11 +342,11 @@ impl SimulationRenderer {
 
         // --- 平移 (鼠标中键) ---
         let mouse_pos = mouse_position().into();
-        if is_mouse_button_pressed(MouseButton::Middle) {
+        if is_mouse_button_pressed(MouseButton::Left) {
             self.is_panning = true;
             self.last_mouse_pos = mouse_pos;
         }
-        if is_mouse_button_released(MouseButton::Middle) {
+        if is_mouse_button_released(MouseButton::Left) {
             self.is_panning = false;
         }
         if self.is_panning {
