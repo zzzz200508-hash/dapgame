@@ -90,6 +90,11 @@ async fn main() {
             renderer.check_input();
             renderer.draw_and_update();
 
+            if system.phase == Phase::Sinking {
+                println!("Phase=Sinking, simulation finished at t={}", solver.t);
+                
+            }
+
             next_frame().await
         }
 

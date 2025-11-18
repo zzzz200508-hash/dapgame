@@ -79,7 +79,7 @@ impl CustomSettings {
                 // 如果石头触碰到水面，切换到 Bouncing
                 if stone.position.y -_r * stone.angle.x.sin() <= self.water_level {
                     self.phase = Phase::Bouncing;
-                    println!("Phase switched: Flying -> Bouncing at t={}", stone.position.y);
+                    println!("Phase switched: Flying -> Bouncing at y={}", stone.position.y);
                 }
             }
 
@@ -134,18 +134,33 @@ impl CustomSettings {
         }
     }
 
-}
 
-impl CustomSettings {
     pub fn outline_to_world(&self, stone: &StoneInfo) -> Vec<Vector2D> {
-        let theta = stone.angle.y;
-        let c = theta.cos();
-        let s = theta.sin();
+        // 1. 自转角 (Spin / angle.y)
+        // 决定石头在该时刻呈现的“形状”姿态 (在自身坐标系内旋转)
+        let spin = stone.angle.y;
+        let cos_spin = spin.cos();
+        let sin_spin = spin.sin();
+
+        // 2. 俯仰角 (Pitch / angle.x)
+        // 决定石头整体在世界坐标系中的倾角
+        let pitch = stone.angle.x;
+        let cos_pitch = pitch.cos();
+        let sin_pitch = pitch.sin();
 
         self.stone.outline_com.iter()
-            .map(|p| Vector2D {
-                x: stone.position.x + (p.x * c - p.y * s),
-                y: stone.position.y + (p.x * s + p.y * c),
+            .map(|p| {
+                // A. 先进行自转 (Local Rotation)
+                // 绕石片中心 (0,0) 旋转
+                let x_spun = p.x * cos_spin - p.y * sin_spin;
+                let y_spun = p.x * sin_spin + p.y * cos_spin;
+
+                // B. 再进行俯仰 (World Rotation) 并平移
+                // 将自转后的点，应用俯仰角旋转，然后加上质心位置
+                Vector2D {
+                    x: stone.position.x + (x_spun * cos_pitch - y_spun * sin_pitch),
+                    y: stone.position.y + (x_spun * sin_pitch + y_spun * cos_pitch),
+                }
             })
             .collect()
     }

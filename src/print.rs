@@ -185,7 +185,7 @@ impl SimulationRenderer {
         }
 
         // 8. 绘制一个 "前" 指示器 (红色箭头)
-        let arrow_len = rect.w as f64 * 0.4 * local_scale; // 箭头长度
+        let arrow_len = rect.w as f64 * 0.04 * local_scale; // 箭头长度
         let front_x = center.x + (cos_spin * arrow_len) as f32;
         let front_y = center.y - (sin_spin * arrow_len) as f32; // Y 轴反转
 
@@ -325,7 +325,7 @@ impl SimulationRenderer {
             let mouse_pos_world_before = self.screen_to_world(mouse_pos_screen);
 
             // 缩放
-            let zoom_factor = 1.1;
+            let zoom_factor = 3.0;
             if scroll > 0.0 {
                 self.scale *= zoom_factor;
             } else {
